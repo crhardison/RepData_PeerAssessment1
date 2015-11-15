@@ -86,7 +86,7 @@ data$date &lt;- as.Date(data$date, format = &quot;%Y-%m-%d&quot;)</code></pre>
 </div>
 <div id="what-is-mean-total-number-of-steps-taken-per-day" class="section level2">
 <h2>What is mean total number of steps taken per day?</h2>
-<pre class="r"><code>## Group by date and then sum the total number of steps
+<pre class="r"><code>## Group by date and then sum the total number of steps removing NA entries
 totalSteps &lt;- group_by(data, date) %&gt;% 
     summarize_each(funs(sum(., na.rm = TRUE))) 
 

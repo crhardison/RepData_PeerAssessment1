@@ -23,7 +23,7 @@ data$date <- as.Date(data$date, format = "%Y-%m-%d")
 
 ```{r}
 
-## Group by date and then sum the total number of steps
+## Group by date and then sum the total number of steps removing NA entries
 totalSteps <- group_by(data, date) %>% 
     summarize_each(funs(sum(., na.rm = TRUE))) 
 
