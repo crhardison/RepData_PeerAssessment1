@@ -1,17 +1,28 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-output: 
-  html_document:
-    keep_md: true
----
+# Reproducible Research: Peer Assessment 1
 
 
 ## Loading and preprocessing the data
 
-```{r}
+
+```r
 ## Load dplyr package
 library(dplyr)
+```
 
+```
+## 
+## Attaching package: 'dplyr'
+## 
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+## 
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 ## Load data to data table 
 data <- tbl_df(read.csv("activity.csv", stringsAsFactors = FALSE))
 
@@ -21,8 +32,8 @@ data$date <- as.Date(data$date, format = "%Y-%m-%d")
 
 ## What is mean total number of steps taken per day?
 
-```{r}
 
+```r
 ## Group by date and then sum the total number of steps
 totalSteps <- group_by(data, date) %>% 
     summarize_each(funs(sum(., na.rm = TRUE))) 
@@ -32,28 +43,30 @@ hist(totalSteps$steps,
      col = "red", 
      xlab = "Total Steps", 
      main = "Total Number of Steps Taken Each Day")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png) 
+
+```r
 ## Calculate the mean and save to a variable
 meanSteps <- mean(totalSteps$steps)
-
 ```
 
-The mean number of steps taken each day is `r meanSteps`  
+The mean number of steps taken each day is 9354.2295082  
 
-```{r}
 
+```r
 ## Calculate the median and save to a variable
 medianSteps <- median(totalSteps$steps)
-
 ```
 
-The median number of steps taken each day is `r medianSteps`  
+The median number of steps taken each day is 10395  
 
 
 ## What is the average daily activity pattern?
 
-```{r}
 
+```r
 ## Select the steps and interval columns, Group by interval and then get the average number of steps for each interval
 avgStepsPerInterval <- select(data, steps, interval) %>% 
     group_by(interval) %>% 
@@ -67,30 +80,29 @@ plot(avgStepsPerInterval$interval,
      ylab = "Average Number of Steps", 
      col="blue", 
      main = "Average Number of Steps by Interval") 
-
 ```
 
-```{r}
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
 
+
+```r
 maxActiveInterval <- avgStepsPerInterval[which.max(avgStepsPerInterval$steps),]$interval
-
 ```
 
-The 5 minute interval that contains the maximum number of steps on average over all days is `r maxActiveInterval`   
+The 5 minute interval that contains the maximum number of steps on average over all days is 835   
 
 ## Imputing missing values
 
-```{r}
 
+```r
 ## Get the number of rows with missing values
 naRows <- nrow(data[!complete.cases(data),])
-
 ```
 
-There are `r naRows` rows with missing values in the dataset.
+There are 2304 rows with missing values in the dataset.
 
-```{r}
 
+```r
 ## Create a copy of the data frame
 fullData <- data
 
@@ -106,22 +118,24 @@ hist(fullDataTotalSteps$steps,
      col = "red", 
      xlab = "Total Steps", 
      main = "Total Number of Steps Taken Each Day After Imputing Values")
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-7-1.png) 
+
+```r
 ## Calculate the mean and save to a variable
 fullDataMeanSteps <- mean(fullDataTotalSteps$steps)
-
 ```
 
-The mean number of steps taken each day after imputing values is `r fullDataMeanSteps`  
+The mean number of steps taken each day after imputing values is 1.0766189\times 10^{4}  
 
-```{r}
 
+```r
 ## Calculate the median and save to a variable
 fullDataMedianSteps <- median(fullDataTotalSteps$steps)
-
 ```
 
-The median number of steps taken each day after imputing values is `r fullDataMedianSteps`  
+The median number of steps taken each day after imputing values is 1.0766189\times 10^{4}  
 
 These values differ from the estimates from the first part of the assignment.  
 
@@ -130,8 +144,8 @@ After imputing missing data the total daily number of steps skews to the average
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
 
+```r
 ## Create the factor column weekPart and assign the appropriate value
 fullData$weekPart <- factor(ifelse(weekdays(fullData$date) %in% c("Saturday", "Sunday"),"weekend", "weekday"))
 
@@ -151,5 +165,6 @@ xyplot(steps ~ interval | weekPart,
        col = "blue", 
        layout=c(1,2),
        main = "Average Number of Steps by Interval and Week Part")
-
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
